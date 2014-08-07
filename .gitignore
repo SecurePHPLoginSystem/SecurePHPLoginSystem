@@ -2,3 +2,4 @@
 error/
 stats/
 .htaccess
+common.php
