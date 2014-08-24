@@ -1,9 +1,7 @@
 <?php
-    // These variables define the connection information for your MySQL database
-    $username = "dbusername";
-    $password = "dbpassword";
-    $host = "dbhost";
-    $dbname = "dbname";
+
+    // include database configuration
+   require_once 'config.php' or die('Missing configuration file.  Please rename config.php.sample and edit settings.');
 
     // UTF-8 is a character encoding scheme that allows you to conveniently store
     // a wide varienty of special characters, like ¢ or €, in your database.
