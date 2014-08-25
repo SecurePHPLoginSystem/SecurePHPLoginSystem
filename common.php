@@ -1,7 +1,7 @@
 <?php
 
     // include database configuration
-   include_once 'config.php' or die('Missing configuration file.  Please rename config.php.sample and edit settings.');
+    (require_once 'config.php') or die('Missing configuration file.  Please rename config.php.sample and edit settings.');
 
     // UTF-8 is a character encoding scheme that allows you to conveniently store
     // a wide varienty of special characters, like ¢ or €, in your database.
@@ -22,7 +22,8 @@
         // PDO is designed to provide a flexible interface between PHP and many
         // different types of database servers.  For more information on PDO:
         // http://us2.php.net/manual/en/class.pdo.php
-        $db = new PDO("mysql:host={$host};dbname={$dbname};charset=utf8", $username, $password, $options);
+        $dsn = sprintf("mysql:host=%s;dbname=%s;charset=utf8", DB_HOST, DB_NAME);
+        $db = new PDO($dsn, DB_USER, DB_PASS, $options);
     }
     catch(PDOException $ex)
     {
