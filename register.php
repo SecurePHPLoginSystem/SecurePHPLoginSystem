@@ -10,8 +10,7 @@
     {
         // recaptcha
         require_once('lib/recaptcha/recaptchalib.php');
-        $privatekey = "6LdtJvgSAAAAAE3ZFqqAECgvdR1Of4rUCELCQ7KF";
-        $resp = recaptcha_check_answer ($privatekey,
+        $resp = recaptcha_check_answer (RECAPTCHA_PRIVATE_KEY,
           $_SERVER["REMOTE_ADDR"],
           $_POST["recaptcha_challenge_field"],
           $_POST["recaptcha_response_field"]);
@@ -134,8 +133,7 @@
             <br /><br />
             <?php
                 require_once('lib/recaptcha/recaptchalib.php');
-                $publickey = "6LdtJvgSAAAAAKIduRTSEBdOGyvyYw6xcL3J5R9J"; // you got this from the signup page
-                echo recaptcha_get_html($publickey);
+                echo recaptcha_get_html(RECAPTCHA_PUBLIC_KEY);
             ?>
             <input type="submit" value="Register" />
         </form>

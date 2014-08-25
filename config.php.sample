@@ -1,7 +1,12 @@
 <?php
 
     // These variables define the connection information for your MySQL database
-    $username = "dbusername";
-    $password = "dbpassword";
-    $host = "dbhost";
-    $dbname = "dbname";
+    define('DB_USER', 'dbusername';
+    define('DB_PASS', 'dbpassword';
+    define('DB_HOST', 'localhost';       // if you are unsure, try leaving this alone
+    define('DB_NAME', 'dbname';
+
+    // Provide the private and public key you were issued when you signed up for Recaptcha.
+    // You can sign up at https://www.google.com/recaptcha
+    define('RECAPTCHA_PUBLIC_KEY', 'paste your public key here');
+    define('RECAPTCHA_PRIVATE_KEY', 'paste your private key here');

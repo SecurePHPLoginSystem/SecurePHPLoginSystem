@@ -243,8 +243,7 @@
             <br /><br />
             <?php
                 require_once('lib/recaptcha/recaptchalib.php');
-                $publickey = "6LdtJvgSAAAAAKIduRTSEBdOGyvyYw6xcL3J5R9J"; // you got this from the signup page
-                echo recaptcha_get_html($publickey);
+                echo recaptcha_get_html(RECAPTCHA_PUBLIC_KEY);
             ?>
             <input type="submit" value="Recover" />
         </form>
