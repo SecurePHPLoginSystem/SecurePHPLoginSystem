@@ -15,8 +15,8 @@ $given_slugs = $db->giveSlugs(array('private text', 'logout', 'edit account'));
         echo nl2br(html_escape($given_slugs['slugs']['private text'][$db->giveLangName()])); ?>
         
         <br><br><br>
-        <a href="<?php echo html_escape($db->giveDomain());?>logout.php"><?php echo html_escape($given_slugs['slugs']['logout'][$db->giveLangName()]);?></a>
+        <a href="<?php echo html_escape(DOMAIN);?>logout.php"><?php echo html_escape($given_slugs['slugs']['logout'][$db->giveLangName()]);?></a>
         <br>
-        <a href="<?php echo html_escape($db->giveDomain());?>edit_account.php"><?php echo html_escape($given_slugs['slugs']['edit account'][$db->giveLangName()]);?></a>
+        <a href="<?php echo html_escape(DOMAIN);?>edit_account.php"><?php echo html_escape($given_slugs['slugs']['edit account'][$db->giveLangName()]);?></a>
     </body>
 </html>

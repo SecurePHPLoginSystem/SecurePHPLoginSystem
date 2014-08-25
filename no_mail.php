@@ -49,5 +49,5 @@ if( !empty($_GET['email_key']) )
     }
 }
 else {
-    echo html_escape($given_slugs['slugs']['no mail missing key'][$db->giveLangName()]) . $db->giveDomain() . 'password_reset.php?reset_key=...';
+    echo html_escape($given_slugs['slugs']['no mail missing key'][$db->giveLangName()]) . DOMAIN . 'password_reset.php?reset_key=...';
 }
