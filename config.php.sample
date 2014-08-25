@@ -1,12 +1,31 @@
 <?php
 
     // These variables define the connection information for your MySQL database
-    define('DB_USER', 'dbusername');
-    define('DB_PASS', 'dbpassword');
+    define('DB_USER', 'root');
+    define('DB_PASS', '');
     define('DB_HOST', 'localhost');       // if you are unsure, try leaving this alone
-    define('DB_NAME', 'dbname');
+    define('DB_NAME', 'SPLS_2_0');
 
+    
+    define('DOMAIN',''); // change this to your domain name
+    define('LOGGED_IN_REDIRECT', 'private.php'); // this should be the path from the root on so that it URL will be: $domain . $logged_in_page
+    
+    
     // Provide the private and public key you were issued when you signed up for Recaptcha.
     // You can sign up at https://www.google.com/recaptcha
-    define('RECAPTCHA_PUBLIC_KEY', 'paste your public key here');
-    define('RECAPTCHA_PRIVATE_KEY', 'paste your private key here');
+    define('ALLOW_RECAPTCHA', true); // turn to false if you don't want ReCaptcha on your site.
+    define('RECAPTCHA_PRIVATE_KEY', '6LfQ9PgSAAAAAOPKblkit6re5QGM4CEPgrZGx5I8'); // you got this from the signup page
+    define('RECAPTCHA_PUBLIC_KEY', '6LfQ9PgSAAAAAM7nsh-CJbRsco6YCvPXJOQAu4tN'); // you got this from the signup page
+    
+    
+    define('ALLOW_LANGUAGE', true); // turn to false if you want to go your own way with the language parts
+    define('ALLOW_LANGUAGE_CHANGE', true); // turn to false if you want to keep a language setting, but don't want the user to change to an other language.
+    /* to disable the language system:
+     *          1) turn this to false
+     *          2) write your text in the files if you want text to show up. 
+     * To disable a specific language, delete it from the 'languages' table. 
+     * To add a new language
+     *          1) add it to the 'languages' table.
+     *          2) add the column named after the language (same as the value in the 'languages' table) in the 'slugs' table.
+     */
+    

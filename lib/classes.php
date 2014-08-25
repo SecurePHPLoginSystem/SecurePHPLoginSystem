@@ -8,22 +8,7 @@
  * @author ricardo
  */
 class DBC extends PDO{
-    private $domain = ''; // change this to your domain name
     private $language = 0; // this will be english by default
-    private $logged_in_redirect = 'private.php'; // this should be the path from the root on so that it URL will be: $domain . $logged_in_page
-    private $allow_ReCaptcha = true; // turn to false if you don't want ReCaptcha on your site.
-    private $recaptcha_private_key = '6LfQ9PgSAAAAAOPKblkit6re5QGM4CEPgrZGx5I8'; // you got this from the signup page
-    private $recaptcha_public_key = '6LfQ9PgSAAAAAM7nsh-CJbRsco6YCvPXJOQAu4tN'; // you got this from the signup page
-    private $allow_language = true; // turn to false if you want to go your own way with the language parts
-    private $allow_language_change = true; // turn to false if you want to keep a language setting, but don't want the user to change to an other language.
-    /* to disable the language system:
-     *          1) turn this to false
-     *          2) write your text in the files if you want text to show up. 
-     * To disable a specific language, delete it from the 'languages' table. 
-     * To add a new language
-     *          1) add it to the 'languages' table.
-     *          2) add the column named after the language (same as the value in the 'languages' table) in the 'slugs' table.
-     */
     
     /* The common codes. These are the codes that will be on the top of every page (accessable by the user). */
     public function commonCode($private = false) {
@@ -43,13 +28,13 @@ class DBC extends PDO{
         // This code will be ran in the head of each page. 
         // This might include your style sheet. 
         // To change the default head code, just add / edit the code below.
-        echo '<link href="' . $this->giveDomain() . 'style.css" rel="stylesheet" type="text/css" />';
+        echo '<link href="' . DOMAIN . 'style.css" rel="stylesheet" type="text/css" />';
         
     }
     
     # commonCodeUpperBody will be ran first in the body of each page. You could use this to implement Google Analytics
     public function commonCodeUpperBody() {
-        if($this->giveAllowLanguage()) {
+        if(ALLOW_LANGUAGE) {
             echo $this->changeLangForm();
         }
     }
@@ -58,7 +43,7 @@ class DBC extends PDO{
     private function loggedIn() {
         if(empty($_SESSION['user']))
         {
-            header("Location: " . $this->giveDomain() . "login.php");
+            header("Location: " . DOMAIN . "login.php");
             exit;
         }
     }
@@ -80,29 +65,11 @@ class DBC extends PDO{
     }
     
     
-    /* The functions that will give the values of variables. */
-    public function giveDomain() {
-        return $this->domain;
-    }
-    public function giveAllowReCaptcha() {
-        return $this->allow_ReCaptcha;
-    }
-    public function giveAllowLanguage() {
-        return $this->allow_language;
-    }
-    public function giveAllowLanguageChange() {
-        return $this->allow_language_change;
-    }
-    public function giveLoggedInRedirect() {
-        return $this->logged_in_redirect;
-    }
-    
-    
     /* The language functions. These will make up the language part of the website. */
     # changeLangForm gives the form that will be used to change the language of the website
     public function changeLangForm() {
-        if($this->giveAllowLanguage() && $this->giveAllowLanguageChange()) {
-            $form = '<form action="' . $this->giveDomain() . 'change_lang.php" method="post">
+        if(ALLOW_LANGUAGE && ALLOW_LANGUAGE_CHANGE) {
+            $form = '<form action="' . DOMAIN . 'change_lang.php" method="post">
                         <input type="hidden" name="ref_file" value="' . html_escape($_SERVER['REQUEST_URI']) . '">';
             foreach($this->langNames() as $lang) {
                 $lang_names[] = $lang['name'];
@@ -119,7 +86,7 @@ class DBC extends PDO{
     
     # isLang controls if the given language ID is a legit one, and supported by the system.
     public function isLang($language, $name = false) {
-        if($this->giveAllowLanguage()) {
+        if(ALLOW_LANGUAGE) {
             if($name) {
                 $lang_names = $this->langNames(true);
             } else {
@@ -135,8 +102,8 @@ class DBC extends PDO{
     
     # langNames gives the names of all the supported languages.
     public function langNames($names = false) {
-        if($this->giveAllowLanguage()) {
-            require_once($this->giveDomain() . 'lib/functions.php');
+        if(ALLOW_LANGUAGE) {
+            require_once(DOMAIN . 'lib/functions.php');
 
             $lang_names_stmt = $this->prepare('
                 SELECT *
@@ -155,7 +122,7 @@ class DBC extends PDO{
     
     # giveLangID gives the language ID that the user chose, or didn't choose.
     private function giveLangID() {
-        if($this->giveAllowLanguage()) {
+        if(ALLOW_LANGUAGE) {
             if($this->checkLoggedIn()) {
                 $language_stmt = $this->prepare('
                     SELECT lang
@@ -170,7 +137,7 @@ class DBC extends PDO{
                 $language = $_SESSION['language'];
             }
 
-            if(!empty($language) && $this->isLang($language) && $this->giveAllowLanguageChange()) {
+            if(!empty($language) && $this->isLang($language) && ALLOW_LANGUAGE_CHANGE) {
                 return $language;
             } else {
                 return $this->language; // gives the language id
@@ -180,7 +147,7 @@ class DBC extends PDO{
     
     # giveLangName gives the language name the user chose, or didn't choose
     public function giveLangName() {
-        if($this->giveAllowLanguage()) {
+        if(ALLOW_LANGUAGE) {
             $language = $this->isLang($this->giveLangID());
             return $language['name'];
         }
@@ -188,8 +155,8 @@ class DBC extends PDO{
     
     # giveSlugs gives the translation of each slug/id given. The use might look like this: $givenSlugs['slugs'][$slug_name][$db->giveLangName()]
     public function giveSlugs($slugs=false, $ids=false) {
-        if($this->giveAllowLanguage()) {
-            require_once($this->giveDomain() . 'lib/functions.php');
+        if(ALLOW_LANGUAGE) {
+            require_once(DOMAIN . 'lib/functions.php');
             if(!empty($slugs)) { // this can be used to translate small words which are produced by the system. For example 'Male' and 'Female'.
                 $fetched_slugs_stmt = $this->prepare('
                     SELECT *
@@ -215,10 +182,10 @@ class DBC extends PDO{
     /* The ReCaptcha functions */
     # handleReCaptcha will be called when ReCaptcha should be handled, for example after registration
     private function handleReCaptcha($recaptcha_challenge_field, $recaptcha_response_field) {
-        if($this->giveAllowReCaptcha()) {
+        if(ALLOW_RECAPTCHA) {
             // recaptcha
             require_once('lib/recaptcha/recaptchalib.php');
-            $resp = recaptcha_check_answer ($this->recaptcha_private_key,
+            $resp = recaptcha_check_answer (RECAPTCHA_PRIVATE_KEY,
                 $_SERVER["REMOTE_ADDR"],
                 $recaptcha_challenge_field,
                 $recaptcha_response_field);
@@ -238,9 +205,9 @@ class DBC extends PDO{
     
     # giveReCaptcha will give the picture and the input field
     public function giveReCaptcha() {
-        if($this->giveAllowReCaptcha()) {
-            require_once($this->giveDomain() . 'lib/recaptcha/recaptchalib.php');
-            echo recaptcha_get_html($this->recaptcha_public_key);
+        if(ALLOW_RECAPTCHA) {
+            require_once(DOMAIN . 'lib/recaptcha/recaptchalib.php');
+            echo recaptcha_get_html(RECAPTCHA_PUBLIC_KEY);
         }
     }
     /* From here on all the functions will be for the login system. */
@@ -281,7 +248,7 @@ class DBC extends PDO{
             $_SESSION['user'] = $row;
             $_SESSION['action_token'] = generate_secure_token();
 
-            header("Location: " . $this->giveDomain() . $this->giveLoggedInRedirect());
+            header("Location: " . DOMAIN . LOGGED_IN_REDIRECT);
             exit;
         }
         else
@@ -389,7 +356,7 @@ class DBC extends PDO{
                     ':email' => $email
                 ));
 
-                header("Location: " . $this->giveDomain() . "login.php");
+                header("Location: " . DOMAIN . "login.php");
                 exit;
             }
         }
@@ -397,10 +364,10 @@ class DBC extends PDO{
     
     # forgot_password will control the user's input and sends a mail to the submitted email address
     public function forgotPassword($post) {
-        require_once($this->giveDomain() . 'lib/functions.php');
-        require_once($this->giveDomain() . 'lib/rnum.php');
-        require_once($this->giveDomain() . 'lib/mail.php');
-        require_once($this->giveDomain() . 'lib/password.php');
+        require_once(DOMAIN . 'lib/functions.php');
+        require_once(DOMAIN . 'lib/rnum.php');
+        require_once(DOMAIN . 'lib/mail.php');
+        require_once(DOMAIN . 'lib/password.php');
         
         $email = $post['email'];
         if(!empty($post['recaptcha_challenge_field'])) {
@@ -645,7 +612,7 @@ class DBC extends PDO{
             if(!filter_var($post['email'], FILTER_VALIDATE_EMAIL))
             {
                 $_SESSION['system_message'] .= $given_slugs['slugs']['invalid email'][$this->giveLangName()] . "<br>";
-                header('Location: ' . $this->giveDomain() . 'edit_account.php');
+                header('Location: ' . DOMAIN . 'edit_account.php');
                 exit;
             }
 
@@ -674,7 +641,7 @@ class DBC extends PDO{
                 if($email_check)
                 {
                     $_SESSION['system_message'] .= $given_slugs['slugs']['existing email'][$this->giveLangName()] . "<br>";
-                    header('Location: ' . $this->giveDomain() . 'edit_account.php');
+                    header('Location: ' . DOMAIN . 'edit_account.php');
                     exit;
                 }
             }
@@ -687,7 +654,7 @@ class DBC extends PDO{
                     $password = password_hash($post['new_password'], PASSWORD_BCRYPT, array("cost" => 10));
                 } else {
                     $_SESSION['system_message'] .= $given_slugs['slugs']['unmatching passwords'][$this->giveLangName()] . "<br>";
-                    header('Location: ' . $this->giveDomain() . 'edit_account.php');
+                    header('Location: ' . DOMAIN . 'edit_account.php');
                     exit;
                 }
 
@@ -749,7 +716,7 @@ class DBC extends PDO{
 
             $_SESSION['system_message'] .= $given_slugs['slugs']['edit account success'][$this->giveLangName()] . "<br>";
             // This redirects the user back to the logout page to log him out after they changing his data
-            header('Location: ' . $this->giveDomain() . 'logout.php');
+            header('Location: ' . DOMAIN . 'logout.php');
 
             // Calling die or exit after performing a redirect using the header function
             // is critical.  The rest of your PHP script will continue to execute and
@@ -757,7 +724,7 @@ class DBC extends PDO{
             exit;
         } else {
             $_SESSION['system_message'] .= $given_slugs['slugs']['incorrect password'][$this->giveLangName()] . "<br>";
-            header('Location: ' . $this->giveDomain() . 'edit_account.php');
+            header('Location: ' . DOMAIN . 'edit_account.php');
             exit;
         }
     }

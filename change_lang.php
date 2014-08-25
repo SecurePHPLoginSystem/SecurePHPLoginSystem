@@ -6,7 +6,7 @@
     $db->commonCode();
     
     $return = false;
-    if(!empty($_POST) && $db->giveAllowLanguageChange()) {
+    if(!empty($_POST) && ALLOW_LANGUAGE_CHANGE) {
         $is_lang = $db->isLang($_POST['action']);
         if(!empty($is_lang) && !empty($_POST['ref_file'])) {
             if($db->checkLoggedIn()) {
@@ -27,9 +27,9 @@
     }
     
     if($return) {
-        header("Location: " . $db->giveDomain() . html_escape($_POST['ref_file']));
+        header("Location: " . DOMAIN . html_escape($_POST['ref_file']));
         exit;
     } else {
-        header("Location: " . $db->giveDomain() . "login.php");
+        header("Location: " . DOMAIN . "login.php");
         exit;
     }
