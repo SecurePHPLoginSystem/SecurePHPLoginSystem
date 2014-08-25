@@ -4,3 +4,5 @@ stats/
 .htaccess
 config.php
 nbproject/
+.DS_Store
+lib/.DS_Store

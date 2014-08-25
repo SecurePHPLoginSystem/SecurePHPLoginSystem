@@ -1,4 +1,5 @@
 <?php
+    defined('VALID_PAGE') or die('You are not authorized to view this page.');
 /*~ class.phpmailer.php
 .---------------------------------------------------------------------------.
 |  Software: PHPMailer - PHP email class                                    |

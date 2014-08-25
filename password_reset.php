@@ -1,6 +1,9 @@
 <?php
+    define('VALID_PAGE', true);
     require("common.php");
     require("lib/password.php");
+
+    $db->commonCode();
 
     $reset_key = $_GET["reset_key"];
     $user = $_GET["user"];
@@ -80,26 +83,33 @@
             }
         }
     }
+    
+    $given_slugs = $db->giveSlugs(array('forgot password', 'password reset success', 'password reset fail', 'new password', 'password reset submit'));
+    
 ?> <html>
+    <head>
+        <?php $db->commonCodeHead(); ?>
+    </head>
     <body>
-        <h1>Forgot password</h1>
-        <?php
+        <?php $db->commonCodeUpperBody(); ?>
+        <h1><?php echo html_escape($given_slugs['slugs']['forgot password'][$db->giveLangName()]);?></h1>
+        <?php $db->SystemMessage();
             if ($reset_echo) {
                 if ($reset_successful) {
-                    echo 'Your password has been reset!';
+                    echo html_escape($given_slugs['slugs']['password reset success'][$db->giveLangName()]);
                 } else {
-                    echo 'This token has already been used, expired or inactive, please request a new one';
+                    echo html_escape($given_slugs['slugs']['password reset fail'][$db->giveLangName()]);
                 }
             }
         ?>
         <form action="password_reset.php" method="post">
-            New password:
+            <?php echo html_escape($given_slugs['slugs']['new password'][$db->giveLangName()]);?>:
                 <input type="text" name="password" value="" />
                 <br /><br />
             <input type="hidden" name="reset_key" value="<?php echo $reset_key; ?>" />
             <input type="hidden" name="user" value="<?php echo $user; ?>" />
             <input type="hidden" name="password_token" value="<?php echo $password_token; ?>" />
-            <input type="submit" value="Login" />
+            <input type="submit" value="<?php echo html_escape($given_slugs['slugs']['password reset submit'][$db->giveLangName()]);?>" />
         </form>
     </body>
 </html>

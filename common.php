@@ -1,7 +1,17 @@
 <?php
 
+
     // include database configuration
     (require_once 'config.php') or die('Missing configuration file.  Please rename config.php.sample and edit settings.');
+
+    defined('VALID_PAGE') or die('You are not authorized to view this page.');
+    require_once('lib/classes.php');
+    
+    // These variables define the connection information for your MySQL database
+    $username = "root"; 
+    $password = ""; 
+    $host = "localhost"; 
+    $dbname = "SPLS_2_0";
 
     // UTF-8 is a character encoding scheme that allows you to conveniently store
     // a wide varienty of special characters, like ¢ or €, in your database.
@@ -22,8 +32,9 @@
         // PDO is designed to provide a flexible interface between PHP and many
         // different types of database servers.  For more information on PDO:
         // http://us2.php.net/manual/en/class.pdo.php
+
         $dsn = sprintf("mysql:host=%s;dbname=%s;charset=utf8", DB_HOST, DB_NAME);
-        $db = new PDO($dsn, DB_USER, DB_PASS, $options);
+        $db = new DBC($dsn, DB_USER, DB_PASS, $options);
     }
     catch(PDOException $ex)
     {

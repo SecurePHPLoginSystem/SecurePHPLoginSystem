@@ -1,23 +1,22 @@
 <?php
-
+    define('VALID_PAGE', true);
     require("common.php"); 
+    require_once('lib/functions.php');
+    $db->commonCode(true);
+    $db->SystemMessage();
 
-    if(empty($_SESSION['user']))
-    {
-        header("Location: login.php");
-        exit;
-    }
-?>
-login succeded, congrats!
-<br><br>
-From here on the files beginning with this code:
-
-require("common.php");
-
-if(empty($_SESSION['user']))
-{
-    header("Location: login.php");
-    exit;
-}
-
-will be protected by the script, note this piece of code has to be on EVERY page you want to protect. This code is also visable in the file 'private.php'
+$given_slugs = $db->giveSlugs(array('private text', 'logout', 'edit account'));
+?><html>
+    <head>
+        <?php $db->commonCodeHead(); ?>
+    </head>
+    <body>
+        <?php $db->commonCodeUpperBody();
+        echo nl2br(html_escape($given_slugs['slugs']['private text'][$db->giveLangName()])); ?>
+        
+        <br><br><br>
+        <a href="<?php echo html_escape($db->giveDomain());?>logout.php"><?php echo html_escape($given_slugs['slugs']['logout'][$db->giveLangName()]);?></a>
+        <br>
+        <a href="<?php echo html_escape($db->giveDomain());?>edit_account.php"><?php echo html_escape($given_slugs['slugs']['edit account'][$db->giveLangName()]);?></a>
+    </body>
+</html>

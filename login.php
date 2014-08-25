@@ -17,72 +17,41 @@
     ///* THE SOFTWARE.
     /////////////////////////////////////////////
     /////////////////////////////////////////////
+    define('VALID_PAGE', true);
+    
+    require_once("common.php");
+    require_once("lib/password.php");
+    require_once("lib/functions.php");
 
-    require("common.php");
-    require("lib/password.php");
-    require ("lib/functions.php");
-
+    $db->commonCode();
+    
     $submitted_username = '';
 
-
+    
     if(!empty($_POST))
     {
-        $user_information_stmt = $db->prepare('
-            SELECT
-                user_id,
-                username,
-                password,
-                email
-            FROM users
-            WHERE
-                username = :username
-        ');
-
-
-        $user_information_stmt->execute(array(
-            ':username' => $_POST['username']
-        ));
-
-        $login_ok = false;
-
-        $row = $user_information_stmt->fetch();
-        if($row)
-        {
-            if ( password_verify($_POST['password'], $row['password']) )
-            {
-                $login_ok = true;
-            }
-        }
-
-        if($login_ok)
-        {
-            unset($row['password']);
-            $_SESSION['user'] = $row;
-            $_SESSION['action_token'] = generate_secure_token();
-
-            header("Location: private.php");
-            exit;
-        }
-        else
-        {
-            print("Login Failed.");
-            $submitted_username = html_escape($_POST['username']);
-        }
+        $submitted_username = $_POST['username'];
+        $db->login($_POST['username'], $_POST['password']);
     }
-
+    $given_slugs = $db->giveSlugs(array('login', 'username', 'password', 'register', 'forgot password'));
 ?>
 <html>
+    <head>
+        <?php $db->commonCodeHead(); ?>
+    </head>
     <body>
-        <h1>Login</h1>
+        <?php $db->commonCodeUpperBody(); ?>
+        <h1><?php echo html_escape($given_slugs['slugs']['login'][$db->giveLangName()]);?></h1>
+        <?php $db->SystemMessage();?>
         <form action="login.php" method="post">
-        Username:
-            <input type="text" name="username" value="<?php echo $submitted_username; ?>" />
+        <?php echo html_escape($given_slugs['slugs']['username'][$db->giveLangName()]);?>:
+            <input type="text" name="username" value="<?php echo html_escape($submitted_username); ?>" />
             <br /><br />
-        Password:
+        <?php echo html_escape($given_slugs['slugs']['password'][$db->giveLangName()]);?>:
             <input type="password" name="password" value="" />
             <br /><br />
-        <input type="submit" value="Login" />
+        <input type="submit" value="<?php echo html_escape($given_slugs['slugs']['login'][$db->giveLangName()]);?>" />
         </form>
-        <a href="register.php">Register</a>
+        <a href="register.php"><?php echo html_escape($given_slugs['slugs']['register'][$db->giveLangName()]);?></a> | <a href="forgot_password.php"><?php echo html_escape($given_slugs['slugs']['forgot password'][$db->giveLangName()]);?></a>
     </body>
 </html>

@@ -1,4 +1,5 @@
 <?php
+    defined('VALID_PAGE') or die('You are not authorized to view this page.');
 /**
  * A Compatibility library with PHP 5.5's simplified password hashing API.
  *
